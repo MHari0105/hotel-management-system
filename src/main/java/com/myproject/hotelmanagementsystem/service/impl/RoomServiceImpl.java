@@ -29,7 +29,6 @@ public class RoomServiceImpl implements RoomService {
         else {
             roomRepo.save(room);
             return "Room " + room.getRoomNo() + " saved";
-
         }
     }
     

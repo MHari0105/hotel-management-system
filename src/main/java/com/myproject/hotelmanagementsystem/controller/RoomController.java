@@ -38,7 +38,7 @@ public class RoomController {
         return new ResponseEntity<>(roomService.getFreeRooms(), HttpStatus.OK);
     }
 
-    @PutMapping("put/{roomId}")
+    @PutMapping("/update/{roomId}")
     public ResponseEntity<Room> changeRoomStatus(@PathVariable Long roomId, @RequestBody Room room) {
         return new ResponseEntity<>(roomService.changeStatus(roomId, room), HttpStatus.OK);
     }

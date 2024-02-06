@@ -15,5 +15,6 @@ public class ReservationRequest {
     private Long guestId;
     private Integer totalMembers;
     private Long roomId;
+    private String roomType;
 
 }

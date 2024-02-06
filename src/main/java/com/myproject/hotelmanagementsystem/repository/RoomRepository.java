@@ -11,4 +11,6 @@ import com.myproject.hotelmanagementsystem.entity.Room;
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findByIsOccupiedFalse();
+
+    List<Room> findByRoomTypeAndIsOccupiedFalse(String roomType);
 }

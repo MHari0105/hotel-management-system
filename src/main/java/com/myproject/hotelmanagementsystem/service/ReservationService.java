@@ -6,7 +6,7 @@ import com.myproject.hotelmanagementsystem.entity.Reservation;
 
 public interface ReservationService {
     
-    public String reserveroom(Long guestId, Long roomId, Integer totalMembers);
+    public String reserveRoom(Long guestId, String roomType, Integer totalMembers);
     public List<Reservation> getReservedRooms();
     public String closeReservation(Long resId);
 }

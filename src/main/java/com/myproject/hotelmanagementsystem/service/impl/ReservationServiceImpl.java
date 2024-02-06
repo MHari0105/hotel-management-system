@@ -32,41 +32,50 @@ public class ReservationServiceImpl implements ReservationService {
     private RoomRepository roomRepo;
 
     @Override
-    public String reserveroom(@NonNull Long guestId,@NonNull Long roomId, Integer totalMembers) {
+    public String reserveRoom(@NonNull Long guestId,@NonNull String roomType, Integer totalMembers) {
 
         Optional<Guest> guestOpt = guestRepo.findById(guestId);
-        Optional<Room> roomOpt = roomRepo.findById(roomId);
+        // Optional<Room> roomOpt = roomRepo.findById(roomId);
 
-        if (guestOpt.isPresent() && roomOpt.isPresent()) {
+        if (guestOpt.isPresent()) {             //  && roomOpt.isPresent()
             Guest guest = guestOpt.get();
-            Room room = roomOpt.get();
+            // Room room = roomOpt.get();
 
-            if (room.getIsOccupied()) 
-                return "Room " + room.getRoomNo() + " alraedy occupied";
+            // if (room.getIsOccupied()) 
+            //     return "Room " + room.getRoomNo() + " alraedy occupied";
 
-            String guestname = guest.getFirstName();
-            String contactNo = guest.getPhoneNo();
-            String guestMailId = guest.getMailId();
+            List<Room> availableRooms = roomRepo.findByRoomTypeAndIsOccupiedFalse(roomType);
 
-            room.setIsOccupied(true);
-            roomRepo.save(room);
+            if (availableRooms.isEmpty()) 
+                return "Sorry, currently, no " + roomType + " is available";
 
-            Reservation reservation = new Reservation();
+            for (Room room : availableRooms) {
+                String guestname = guest.getFirstName();
+                String contactNo = guest.getPhoneNo();
+                String guestMailId = guest.getMailId();
 
-            reservation.setGuest(guest);
-            reservation.setName(guestname);
-            reservation.setContactNo(contactNo);
-            reservation.setMailId(guestMailId);
-            reservation.setTotalMembers(totalMembers);
-            reservation.setRoom(room);
-            reservation.setCheckInDate(new Date());
+                room.setIsOccupied(true);
+                roomRepo.save(room);
 
-            reservationRepo.save(reservation);
+                Reservation reservation = new Reservation();
 
-            return "Room resreved successfully";
+                reservation.setGuest(guest);
+                reservation.setName(guestname);
+                reservation.setContactNo(contactNo);
+                reservation.setMailId(guestMailId);
+                reservation.setTotalMembers(totalMembers);
+                reservation.setRoom(room);
+                reservation.setCheckInDate(new Date());
+
+                reservationRepo.save(reservation);
+
+                return "Room " + room.getRoomNo() + " resreved successfully";
+            }
+           
         }
 
-        else return "Guest or Room not found";
+        return "Guest not found or invalid room type specified";
+        
     }
 
     public List<Reservation> getReservedRooms() {
@@ -82,6 +91,7 @@ public class ReservationServiceImpl implements ReservationService {
 
             if (reservation.getCheckOutDate() == null) {
                 Room room = reservation.getRoom();
+                room.setIsOccupied(false);
                 Date outDate = new Date();
                 long durationOfHours = calculateDurationInHours(reservation.getCheckInDate(), outDate);
                 double discount = calculateDiscount(reservation.getGuest().getVisited());

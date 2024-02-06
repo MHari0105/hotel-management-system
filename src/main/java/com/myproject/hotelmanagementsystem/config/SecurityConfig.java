@@ -29,20 +29,20 @@ public class SecurityConfig {
                             .requestMatchers("/api/guest/get",
                                             "/api/guest/get/**",
                                             "/api/guest/delete/**",
-                                            "/api/guest/update/**")
+                                            "/api/guest/update/**",
+                                            "/api/reserve/get")
                             .hasAuthority("ADMIN")
 
                             .requestMatchers("/api/room/post",
                                             "/api/room/get",
-                                            "/api/room/put/**")
+                                            "/api/room/update/**")
                             .hasAuthority("MANAGER")
 
                             .requestMatchers("/api/room/available")
-                            .hasAnyAuthority("GUEST", "MANAGER")
+                            .hasAnyAuthority("GUEST", "MANAGER", "ADMIN")
 
                             .requestMatchers("/api/guest/post",
                                             "/api/reserve/post",
-                                            "/api/reserve/get",
                                             "/api/reserve/close")
                             .hasAnyAuthority("ADMIN", "MANAGER")
                         .anyRequest().authenticated())

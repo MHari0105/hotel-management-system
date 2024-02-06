@@ -26,8 +26,8 @@ public class ReservationController {
 
     @PostMapping("/post")
     public ResponseEntity<String> reserveRoom(@RequestBody ReservationRequest reservationRequest) {
-        String result = reservationService.reserveroom(
-            reservationRequest.getGuestId(), reservationRequest.getRoomId(), reservationRequest.getTotalMembers()
+        String result = reservationService.reserveRoom(
+            reservationRequest.getGuestId(), reservationRequest.getRoomType(), reservationRequest.getTotalMembers()
         );
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
